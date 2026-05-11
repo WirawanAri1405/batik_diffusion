@@ -1,6 +1,6 @@
 "use client";
 import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei';
+import { useGLTF, Center, Stage } from '@react-three/drei';
 import { useLoader } from '@react-three/fiber';
 import { useEffect, useMemo } from 'react';
 
@@ -62,7 +62,7 @@ interface ShirtModelProps {
 
 export default function ShirtModel({ textureUrl }: ShirtModelProps) {
   // Load file .glb dari folder public/models/
-  const { scene } = useGLTF('/models/shirt_baked.glb');
+  const { scene } = useGLTF('/models/white_swimsuit_dress.glb');
   
   // SANGAT PENTING: Clone (Gandakan) objek agar kita bisa memanipulasi materialnya 
   // tanpa merusak cache bawaan React Three Fiber.
@@ -71,15 +71,17 @@ export default function ShirtModel({ textureUrl }: ShirtModelProps) {
   return (
     // Atur Scale (ukuran) dan Position (posisi y) jika baju Anda kekecilan atau melayang.
     // Skala 1.5 artinya 1,5x lebih besar dari aslinya.
-    <group position={[0, 0, 0]} scale={1.5}>
-      {textureUrl ? (
-        <TexturedBaju scene={copiedScene} url={textureUrl} />
-      ) : (
-        <PolosBaju scene={copiedScene} />
-      )}
-    </group>
+<Center>
+  <Stage adjustCamera intensity={0.5} environment="sunset">
+  {textureUrl ? (
+    <TexturedBaju scene={copiedScene} url={textureUrl} />
+  ) : (
+    <PolosBaju scene={copiedScene} />
+  )}
+</Stage>
+</Center>
   );
 }
 
 // Pre-load model agar saat web dibuka, model baju sudah langsung siap
-useGLTF.preload('/models/shirt_baked.glb');
+useGLTF.preload('/models/blue_knitted_criss-cross_bikini_set.glb');
