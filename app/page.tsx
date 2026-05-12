@@ -81,7 +81,7 @@ const currentModelPath = useMemo(() => {
   };
 
   return (
-    <main className="min-h-screen bg-neutral-100 p-8 font-sans text-gray-800">
+    <main className="min-h-screen bg-neutral-100 p-8 font-sans text-gray-800 bg-[url('/background.png')] bg-cover bg-center bg-fixed">
       <header className="mb-8 text-center">
         <h1 className="text-4xl font-bold text-amber-900 mb-2">Batik AI Studio</h1>
         <p className="text-gray-600">Sintesis Motif Berbasis AI dengan Preview 3D Interaktif</p>
