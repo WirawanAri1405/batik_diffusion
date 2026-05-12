@@ -18,7 +18,7 @@ function TexturedBaju({ scene, url }: { scene: THREE.Group, url: string }) {
     
     // SANGAT PENTING: File .glb/.gltf membungkus tekstur secara terbalik. 
     // Harus disetel false agar motif tidak terbalik atas-bawah.
-    texture.flipY = false; 
+    texture.flipY = true; 
     
     // Cari semua bagian baju (mesh) dan timpa dengan kain batik
     scene.traverse((child) => {
@@ -62,7 +62,7 @@ interface ShirtModelProps {
 
 export default function ShirtModel({ textureUrl }: ShirtModelProps) {
   // Load file .glb dari folder public/models/
-  const { scene } = useGLTF('/models/white_swimsuit_dress.glb');
+  const { scene } = useGLTF('/models/dress.glb');
   
   // SANGAT PENTING: Clone (Gandakan) objek agar kita bisa memanipulasi materialnya 
   // tanpa merusak cache bawaan React Three Fiber.
