@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const maxDuration = 30;
+
 const BANNED_WORDS = [
   "nude", "naked", "nsfw", "blood", "gore", "sexy", "porn",
   "robot", "anime", "manga", "realistic photo", "person", "face"
@@ -52,7 +54,7 @@ export async function POST(request: Request) {
 
     const colabResponse = await fetch(`${COLAB_API_URL}/generate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
       body: JSON.stringify({
         prompt: promptText,
         negative_prompt: negative_prompt,
