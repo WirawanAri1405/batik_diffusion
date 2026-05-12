@@ -6,7 +6,7 @@ import { useEffect, useMemo } from 'react';
 
 // 1. Komponen jika AI sudah selesai men-generate gambar
 function TexturedBaju({ scene, url }: { scene: THREE.Group, url: string }) {
-  // useLoader menangani antrean download gambar
+  // useLoader aman di sini karena komponen ini HANYA dipanggil jika url ada isinya
   const texture = useLoader(THREE.TextureLoader, url);
   
   useEffect(() => {
@@ -17,7 +17,7 @@ function TexturedBaju({ scene, url }: { scene: THREE.Group, url: string }) {
     texture.colorSpace = THREE.SRGBColorSpace;
     
     // SANGAT PENTING: File .glb/.gltf membungkus tekstur secara terbalik. 
-    // Harus disetel false agar motif tidak terbalik atas-bawah.
+    // Harus disetel true agar motif tidak terbalik atas-bawah (karena ini base64 external)
     texture.flipY = true; 
     
     // Cari semua bagian baju (mesh) dan timpa dengan kain batik
@@ -58,30 +58,28 @@ function PolosBaju({ scene }: { scene: THREE.Group }) {
 // 3. Komponen Utama
 interface ShirtModelProps {
   textureUrl: string | null;
+  modelPath: string; // Tambahan agar path model bisa dilempar dari page.tsx
 }
 
-export default function ShirtModel({ textureUrl }: ShirtModelProps) {
-  // Load file .glb dari folder public/models/
-  const { scene } = useGLTF('/models/dress.glb');
+export default function ShirtModel({ textureUrl, modelPath }: ShirtModelProps) {
+  // Load file .glb secara dinamis sesuai pilihan (dress/kebaya/mens_shirt)
+  const { scene } = useGLTF(modelPath);
   
-  // SANGAT PENTING: Clone (Gandakan) objek agar kita bisa memanipulasi materialnya 
-  // tanpa merusak cache bawaan React Three Fiber.
-  const copiedScene = useMemo(() => scene.clone(), [scene]);
+  // Clone (Gandakan) objek agar kita bisa memanipulasi materialnya 
+  // tanpa merusak cache bawaan React Three Fiber saat ganti-ganti baju.
+  const copiedScene = useMemo(() => scene.clone(), [scene, modelPath]);
 
   return (
-    // Atur Scale (ukuran) dan Position (posisi y) jika baju Anda kekecilan atau melayang.
-    // Skala 1.5 artinya 1,5x lebih besar dari aslinya.
-<Center>
-  <Stage adjustCamera intensity={0.5} environment="sunset">
-  {textureUrl ? (
-    <TexturedBaju scene={copiedScene} url={textureUrl} />
-  ) : (
-    <PolosBaju scene={copiedScene} />
-  )}
-</Stage>
-</Center>
+    // Mempertahankan Center dan Stage agar otomatis berada di tengah tanpa manual "position"
+    <Center>
+      {/* environment bisa disesuaikan (misal: "city", "sunset", "studio") */}
+      <Stage adjustCamera intensity={0.5} environment="city">
+        {textureUrl ? (
+          <TexturedBaju scene={copiedScene} url={textureUrl} />
+        ) : (
+          <PolosBaju scene={copiedScene} />
+        )}
+      </Stage>
+    </Center>
   );
 }
-
-// Pre-load model agar saat web dibuka, model baju sudah langsung siap
-useGLTF.preload('/models/blue_knitted_criss-cross_bikini_set.glb');
