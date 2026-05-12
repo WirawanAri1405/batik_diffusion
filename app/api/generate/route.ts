@@ -1,58 +1,82 @@
 import { NextResponse } from 'next/server';
 
+const BANNED_WORDS = [
+  "nude", "naked", "nsfw", "blood", "gore", "sexy", "porn",
+  "robot", "anime", "manga", "realistic photo", "person", "face"
+];
+
 export async function POST(request: Request) {
   try {
-    const { makna, konteks } = await request.json();
+    const { prompt, negative_prompt, lora_scale, guidance_scale, seed } = await request.json();
+
+    const userInput = prompt.toLowerCase();
+
+// 1. Text Normalization: Hapus simbol/tanda baca pengecoh
+    // dan jadikan 1 spasi rapi agar mudah dideteksi
+    const cleanInput = userInput.replace(/[^\w\s]/gi, '').replace(/\s+/g, ' ');
+
+    // 2. Blacklist Lapis 1: Kategori NSFW & Anatomi (Menggunakan Regex Word Boundary \b)
+    // Ini akan menangkap kata yang berdiri sendiri maupun typo umum
+    const nsfwPattern = /\b(boob|boobs|tits|breast|cleavage|nude|naked|nsfw|porn|hentai|jav|milf|waifu|sexy|sex|fuck|pussy|dick|cock|erotic)\b/i;
+
+    // 3. Blacklist Lapis 2: Kategori Out-of-Context (Mencegah AI menggambar orang/benda)
+    // Karena kita hanya butuh tekstur kain/batik!
+    const outOfContextPattern = /\b(car|robot|anime|manga|cosplay|realistic photo|person|face|girl|boy|woman|man|lady|japanese)\b/i;
+
+    // 4. Eksekusi Pengecekan
+    if (nsfwPattern.test(cleanInput)) {
+      return NextResponse.json(
+        { status: "error", message: "Prompt ditolak: Mengandung unsur NSFW atau kata yang tidak pantas." },
+        { status: 400 }
+      );
+    }
+
+    if (outOfContextPattern.test(cleanInput)) {
+      return NextResponse.json(
+        { status: "error", message: "Prompt ditolak: Tolong fokus pada deskripsi filosofi, makna, atau motif kain Batik saja (contoh: keberanian, bunga, laut)." },
+        { status: 400 }
+      );
+    }
+    // --- END OF GUARDRAILS ---
+    // Kita kunci AI agar HANYA fokus membuat tekstur kain batik
+    const promptText = `A beautiful batik pattern ${prompt} highly detailed, high contrast, 8k resolution`;
     
-    // 1. Racik prompt khusus untuk SD3 + LoRA Batik
-    const promptText = `${makna}`;
+    const COLAB_API_URL = process.env.COLAB_API_URL;
 
-    // 2. Tentukan URL Ngrok Anda
-    // Sangat disarankan untuk memindahkan URL ini ke file .env.local 
-    // Contoh di .env.local: COLAB_API_URL="https://chantal-...ngrok-free.dev/generate"
-    const COLAB_API_URL = process.env.COLAB_API_URL || "https://chantal-preglacial-nonlacteally.ngrok-free.dev/generate";
+    if (!COLAB_API_URL) {
+      return NextResponse.json(
+        { status: "error", message: "URL API Colab belum diatur" },
+        { status: 500 }
+      );
+    }
 
-    console.log(`Mengirim request ke Colab: ${COLAB_API_URL}`);
-
-    // 3. Kirim request POST ke FastAPI di Colab
-    const colabResponse = await fetch(COLAB_API_URL, {
+    const colabResponse = await fetch(`${COLAB_API_URL}/generate`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         prompt: promptText,
-        lora_scale: 1, // Sesuaikan kekuatan LoRA Batik (0.1 - 1.0)
-        seed: 42// Math.floor(Math.random() * 1000000)  Seed acak agar hasil selalu unik
+        negative_prompt: negative_prompt,
+        lora_scale: parseFloat(lora_scale),
+        guidance_scale: parseFloat(guidance_scale),
+        seed: parseInt(seed)
       }),
-      // Tambahkan timeout yang agak panjang karena AI butuh waktu proses (contoh: 60 detik)
-      // Note: Next.js fetch API bawaan kadang butuh konfigurasi AbortController jika ingin presisi
     });
 
     if (!colabResponse.ok) {
-      throw new Error(`Server Colab menolak dengan status: ${colabResponse.status}`);
+      throw new Error(`Colab Error: ${colabResponse.statusText}`);
     }
 
-    // 4. Parse respons JSON dari Colab
     const data = await colabResponse.json();
-
-    if (data.status === "success") {
-      // 5. Ubah Base64 string menjadi Data URL yang bisa dibaca tag <img> HTML
-      const imageFormat = `data:image/png;base64,${data.image_base64}`;
-      
-      // Langsung kembalikan format ini ke frontend
-      return NextResponse.json({ 
-          status: "success", 
-          imageUrl: imageFormat 
-      });
-    } else {
-      throw new Error("Colab membalas, tapi statusnya gagal.");
-    }
+    
+    return NextResponse.json({ 
+      status: "success", 
+      imageUrl: `data:image/png;base64,${data.image_base64}` 
+    });
 
   } catch (error: any) {
     console.error("Generate Error:", error);
     return NextResponse.json(
-      { status: "error", message: "Gagal memproses gambar dari Colab AI.", details: error.message },
+      { status: "error", message: error.message },
       { status: 500 }
     );
   }
