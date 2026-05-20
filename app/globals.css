@@ -139,3 +139,13 @@ body {
   transform: scale(1.2);
   border-color: #FFF;
 }
+/* Sembunyikan scrollbar untuk Chrome, Safari, dan Opera */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Sembunyikan scrollbar untuk IE, Edge, dan Firefox */
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

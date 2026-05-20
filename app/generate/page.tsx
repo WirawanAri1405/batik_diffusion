@@ -90,7 +90,7 @@ const currentModelPath = useMemo(() => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* PANEL KIRI: FORM */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 col-span-1 flex flex-col h-fit">
+        <div className="bg-white/60 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-gray-200 col-span-1 flex flex-col h-fit">
           <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Parameter Desain</h2>
           
           {/* Pilihan Gender & Konteks Penggunaan */}
@@ -200,12 +200,12 @@ const currentModelPath = useMemo(() => {
         </div>
 
         {/* PANEL KANAN: 3D PREVIEW */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 col-span-1 lg:col-span-2 relative overflow-hidden">
+        <div className="bg-white/60 rounded-2xl shadow-sm border border-gray-200 col-span-1 lg:col-span-2 relative overflow-hidden backdrop-blur-sm">
           <div className="absolute top-4 left-4 z-10 bg-white/90 px-3 py-1 rounded-full text-xs font-medium text-gray-700 shadow-sm backdrop-blur-sm border border-gray-100">
             Preview 3D ({konteks === 'kasual' ? 'Kasual' : konteks === 'formal' ? 'Formal' : 'Pernikahan'})
           </div>
           
-          <Canvas camera={{ position: [0, 0, 4], fov: 45 }} className="w-full h-full bg-neutral-50" dpr={[1, 2]} gl={{ antialias: true, powerPreference: "high-performance" }}>
+          <Canvas camera={{ position: [0, 0, 4], fov: 45 }} className="w-full h-full" dpr={[1, 2]} gl={{ antialias: true, powerPreference: "high-performance" }}>
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 10]} intensity={1} />
             <Environment preset="city" /> 
