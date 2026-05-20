@@ -1,4 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+/public/models/blue_knitted_criss-cross_bikini_set.glb
+/public/models/white_swimsuit_dress.glb
 
 # dependencies
 /node_modules
