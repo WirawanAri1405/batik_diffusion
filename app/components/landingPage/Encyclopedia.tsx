@@ -35,11 +35,11 @@ export default function Encyclopedia() {
         if (matchingBatik) {
             return {
                 onClick: () => handlePinClick(matchingBatik),
-                className: `cursor-pointer transition-colors duration-300 stroke-surface-white stroke-[0.5px] outline-none ${isActive ? 'fill-indigo-blue' : 'fill-surface-variant hover:fill-soga-brown'
+                className: `cursor-pointer transition-colors duration-300 stroke-surface-white stroke-[0.5px] outline-none ${isActive ? 'fill-indigo-blue' : 'fill-primary-fixed-dim hover:fill-soga-brown'
                     }`
             };
         }
-        return { className: "fill-surface-dim stroke-surface-white stroke-[0.5px] opacity-50 outline-none" };
+        return { className: "fill-surface-dim stroke-surface-white stroke-[0.5px] opacity-40 outline-none" };
     };
 
     // Logika Drag Carousel 
@@ -102,7 +102,7 @@ export default function Encyclopedia() {
                     <div className="lg:w-2/3 bg-surface-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-white relative overflow-hidden flex items-center justify-center p-4">
                         <IndonesiaMap getPathProps={getPathProps} />
                         <div className="absolute bottom-4 left-4 text-xs font-label-caps text-on-surface-variant bg-white/70 px-3 py-1 rounded-full border border-white">
-                            Peta Vektor Interaktif
+                            Peta Interaktif
                         </div>
                     </div>
 
@@ -110,7 +110,7 @@ export default function Encyclopedia() {
                     <div className="lg:w-1/3 bg-surface-white/80 backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(139,69,19,0.05)] border border-white p-6 flex flex-col h-[600px]">
                         <div className="mb-4 flex-shrink-0">
                             <div className="text-label-caps text-soga-brown mb-1 tracking-widest uppercase">Eksplorasi Wilayah</div>
-                            <h2 className="text-headline-md font-headline-md text-on-surface truncate">{activeBatik.region}</h2>
+                            <h2 className="text-headline-sm font-headline-md text-on-surface truncate">{activeBatik.region}</h2>
                         </div>
 
                         {/* KONTANER CAROUSEL */}
@@ -155,7 +155,7 @@ export default function Encyclopedia() {
                                     scrollbarWidth: 'none',          // Firefox
                                     msOverflowStyle: 'none',         // IE/Edge
                                 }}
-                                className="flex gap-3 overflow-x-auto pb-2 pt-1 h-36 items-start scrollbar-none select-none scroll-smooth relative cursor-grab active:cursor-grabbing"
+                                className="flex gap-3 overflow-x-auto p-2 pt-1 h-36 items-center scrollbar-none select-none scroll-smooth relative cursor-grab active:cursor-grabbing"
                             >
                                 {activeBatik.motifs.map((motif, idx) => (
                                     <button
@@ -165,15 +165,13 @@ export default function Encyclopedia() {
                                             setActiveMotifIndex(idx);
                                             setSelectedMotif(motif);
                                         }}
-                                        className={`relative flex-shrink-0 w-28 p-2.5 rounded-xl border text-left transition-all duration-300 overflow-hidden flex flex-col gap-1.5 justify-start items-center ${activeMotifIndex === idx
+                                        className={`relative flex-shrink-0 p-1 rounded-xl border text-left transition-all duration-300 overflow-hidden flex flex-col gap-1.5 justify-start items-center ${activeMotifIndex === idx
                                             ? 'border-soga-brown bg-surface-container shadow-md scale-[1.02]'
-                                            : 'border-outline-variant bg-white/40 hover:bg-white/80'
+                                            : 'border-outline-variant bg-surface-container-high/60 hover:bg-primary-fixed-dim'
                                             }`}
                                     >
-                                        {/* Pastikan pointer-events-none pada elemen dekorasi agar tidak menghalangi klik */}
-                                        <div className="absolute -bottom-3 -right-3 w-10 h-10 opacity-5 bg-[url('/background.png')] bg-contain pointer-events-none" />
 
-                                        <div className="w-16 h-16 rounded-lg overflow-hidden border border-outline-variant/40 bg-surface-dim shadow-inner flex-shrink-0">
+                                        <div className="w-25 h-25 rounded-lg overflow-hidden border border-outline-variant/40 bg-surface-dim shadow-inner flex-shrink-0">
                                             <img
                                                 src={motif.img}
                                                 alt={motif.name}
@@ -181,11 +179,6 @@ export default function Encyclopedia() {
                                                 draggable="false"
                                             />
                                         </div>
-
-                                        <span className={`text-[10px] font-bold tracking-wide line-clamp-1 text-center w-full ${activeMotifIndex === idx ? 'text-soga-brown' : 'text-on-surface'
-                                            }`}>
-                                            {motif.name}
-                                        </span>
                                     </button>
                                 ))}
                             </div>
