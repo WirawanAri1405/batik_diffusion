@@ -97,17 +97,14 @@ export default function Encyclopedia() {
                     </p>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-8 min-h-150">
+                <div className="flex flex-col lg:flex-row gap-8 min-h-140">
                     {/* SVG Map */}
                     <div className="lg:w-2/3 bg-surface-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-white relative overflow-hidden flex items-center justify-center p-4">
                         <IndonesiaMap getPathProps={getPathProps} />
-                        <div className="absolute bottom-4 left-4 text-xs font-label-caps text-on-surface-variant bg-white/70 px-3 py-1 rounded-full border border-white">
-                            Peta Interaktif
-                        </div>
                     </div>
 
                     {/* DETAIL PANEL & CAROUSEL */}
-                    <div className="lg:w-1/3 bg-surface-white/80 backdrop-blur-md rounded-2xl shadow-[0_8px_32px_rgba(139,69,19,0.05)] border border-white p-6 flex flex-col h-[600px]">
+                    <div className="lg:w-1/3 bg-surface-white/80 backdrop-blur-md rounded-2xl shadow-sm border border-white p-6 flex flex-col h-140">
                         <div className="mb-4 flex-shrink-0">
                             <div className="text-label-caps text-soga-brown mb-1 tracking-widest uppercase">Eksplorasi Wilayah</div>
                             <h2 className="text-headline-sm font-headline-md text-on-surface truncate">{activeBatik.region}</h2>
@@ -185,7 +182,7 @@ export default function Encyclopedia() {
                         </div>
 
                         {/* Detail Text Description */}
-                        <div className="flex-grow overflow-y-auto min-h-0 border-t border-outline-variant/20 pt-4 relative">
+                        <div className="flex-grow overflow-y-auto min-h-0 border-t border-outline-variant/20 pt-4 relative scrollbar-none">
                             <div className={`fade-transition flex flex-col gap-2 h-full ${isFading ? 'fade-out' : ''}`}>
                                 <h3 className="text-body-lg font-headline-sm text-on-surface font-bold">
                                     {activeBatik.motifs[activeMotifIndex]?.name || "Memuat..."}
