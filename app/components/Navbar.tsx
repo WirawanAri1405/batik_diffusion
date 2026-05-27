@@ -80,14 +80,14 @@ export default function Navbar() {
                     Logout
                   </button>
                 </div>
-                <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-soga-brown shadow-sm transition-transform group-hover:scale-105 relative">
+                <Link href="/profile"  className="w-9 h-9 rounded-full overflow-hidden border-2 border-soga-brown shadow-sm transition-transform group-hover:scale-105 relative">
                   <Image 
                     src="/canting.png"
                     alt="User Profile" 
                     fill 
                     className="object-cover"
                   />
-                </div>
+                </Link>
               </div>
             ) : (
               /* TAMPILAN DESKTOP: Jika User Belum Login */
@@ -143,8 +143,8 @@ export default function Navbar() {
               {user ? (
                 /* TAMPILAN MOBILE: Komponen Profil & Tombol Keluar */
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-4 px-3 py-2 bg-soga-brown/5 rounded-2xl">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-soga-brown relative flex-shrink-0">
+                  <Link href="/profile" className="flex items-center gap-4 px-3 py-2 bg-soga-brown/5 rounded-2xl">
+                    <div  className="w-10 h-10 rounded-full overflow-hidden border-2 border-soga-brown relative flex-shrink-0">
                       <Image 
                         src="/canting.png"
                         alt="User Profile" 
@@ -156,7 +156,7 @@ export default function Navbar() {
                       <p className="text-sm font-bold text-on-surface truncate">{displayName}</p>
                       <p className="text-xs text-on-surface-variant/70 truncate">{user.email}</p>
                     </div>
-                  </div>
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-center py-2.5 rounded-xl border border-red-200 text-sm font-semibold text-red-600 bg-red-50/50 hover:bg-red-50 transition-colors"
